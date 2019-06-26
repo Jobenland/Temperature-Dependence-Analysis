@@ -66,19 +66,35 @@ def mainWin():
     while True:
 
         if event is None or event == 'Exit':
+
             break
+
         if event == 'start':
             area = values['area']
             directory = values['files']
             zipp = values['zip']
 
+            try:
+                intTemp = (float(area))
+                os.chdir(directory)
+                os.open(zipp, os.O_RDONLY)
+            except ValueError:
+                window.Close()
+                sg.PopupError("Ensure you Have entered a vaid number")
+                mainWin()   
+            except FileNotFoundError:
+                window.Close()
+                sg.PopupError("The OS could not detect that directory or ZIP file")
+                mainWin()
+
             if area == '' or directory == '':
                 window.Close()
-                sg.Popup("ERROR: Insufficent data or Null Pointers given")
+                sg.PopupError("Insufficent data or Null Pointers given")
                 mainWin()
             
             #if both areas are populated then
             if area != '' or directory != '':
+               
                 window.Close()
                 zDir = unzipper(directory,zipp)
                 testing(area,zDir)
@@ -95,7 +111,7 @@ def unzipper(directory,zipp):
 
     #create new folder to put extracted data in
     os.chdir(directory)
-    newFolder = 'Extracted'
+    newFolder = sg.PopupGetText('Enter a name for the new folder', directory)
     try:
         if not os.path.exists(newFolder):
             os.makedirs(newFolder)
@@ -137,16 +153,18 @@ def unzipper(directory,zipp):
 
 #Definiton to do that math on the .z files in the new folder
 def testing(area,directory):
-    stringFreq = []
-    stringTS = []
-    stringZPrime = []
-    stringZDoublePrime = []
+    
 
     #error checking to make sure no rouge non-Impedance Files got in
     impFiles = listOfImpFiles(area,directory)
     os.chdir(directory)
 
     for file in impFiles:
+        stringFreq = []
+        stringTS = []
+        stringZPrime = []
+        stringZDoublePrime = []
+
         with open (file, 'r') as f:
             for row in f:
                 if 'End Header:' in row:
@@ -184,8 +202,8 @@ def testing(area,directory):
             zPrimeARC= [((zPrimeOC[i])*(intArea)) for i in range(len(intZPrime))]
             zDoublePrimeARC = [((intZDoublePrime[i])*(intArea)) for i in range(len(intZDoublePrime))]
             positiveZDoublePrime = [-x for x in zDoublePrimeARC]
-            createCSV(file,directory,intTS, intFreq, intZPrime,intZDoublePrime,zPrimeOC,zPrimeARC,zDoublePrimeARC,positiveZDoublePrime)
-            print("rp?")
+        createCSV(file,directory,intTS, intFreq, intZPrime,intZDoublePrime,zPrimeOC,zPrimeARC,zDoublePrimeARC,positiveZDoublePrime)
+        print("rp?")
 
 #definition to get the range of the data
 #will get the last negative point and the last positive point
@@ -278,6 +296,7 @@ def getDate(file):
 # with multiple sheet names as all the .z files from
 # different temperatures
 def generateSheets(listOfCSV, fileName):
+    fileName = sg.PopupGetText("enter a name for the combined Excel file", 'Excel File Name')
     writer = pd.ExcelWriter(fileName+'.xlsx', engine = 'xlsxwriter') 
     for csv in listOfCSV:
         csvSplitList = csv.split('_')
