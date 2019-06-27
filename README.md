@@ -5,7 +5,7 @@
 This Program will extract data from multiple temperature ranges and calculate values such as z prime and z double prime
 It will then place the data in a csv that can be used in graphing in the CSV graphing software available for download on my github
 
-NOTE: When given the option to select a zip file, Mac users should instead select the `unzipped folder location` of their original zipped file and leave the final box BLANK. Otherwise, The program will not be able to read the zip file and call a critical error causing the program to crash
+NOTE: When given the option to select a zip file, Mac users should instead select the `unzipped folder location` of their original zipped file and leave the final box BLANK. Otherwise, The program will not be able to read the zip file and call a critical error causing the program to crash(working on a fix in the future)
 
 ## Getting Started and Important Notes
 Files MUST be zipped in a folder for correct deployment Ex. `EIS_OCV_..._EXAMPLE.zip`
