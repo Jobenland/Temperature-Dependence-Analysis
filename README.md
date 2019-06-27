@@ -1,9 +1,11 @@
 ![size badge](https://img.shields.io/github/repo-size/Jobenland/Temperature-Dependence-Analysis.svg) ![license](https://img.shields.io/github/license/Jobenland/Temperature-Dependence-Analysis.svg) ![build](https://img.shields.io/badge/Build-Passing-green.svg) ![issues](https://img.shields.io/github/issues/Jobenland/Temperature-Dependence-Analysis.svg) ![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg) ![python](https://img.shields.io/badge/Python-3.x-lightgrey.svg) ![toplang](https://img.shields.io/github/languages/top/Jobenland/Temperature-Dependence-Analysis.svg) ![quality](https://img.shields.io/badge/Code%20Quality-Testing...-red.svg)
 
-##Temperature Dependence Analysis
+## Temperature Dependence Analysis
 
 This Program will extract data from multiple temperature ranges and calculate values such as z prime and z double prime
 It will then place the data in a csv that can be used in graphing in the CSV graphing software available for download on my github
+
+NOTE: When given the option to select a zip file, Mac users should instead select the `unzipped folder location` of their original zipper file and leave the final box BLANK. Otherwise, The program will not be able to read the zip file and impact the useability of the program
 
 ## Getting Started and Important Notes
 Files MUST be zipped in a folder for correct deployment Ex. `EIS_OCV_..._EXAMPLE.zip`
