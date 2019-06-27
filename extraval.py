@@ -77,7 +77,6 @@ def mainWin():
             try:
                 intTemp = (float(area))
                 os.chdir(directory)
-                os.open(zipp, os.O_RDONLY)
             except ValueError:
                 window.Close()
                 sg.PopupError("Ensure you Have entered a vaid number")
@@ -93,36 +92,65 @@ def mainWin():
                 mainWin()
             
             #if both areas are populated then
-            if area != '' or directory != '':
-               
+            if area != '' and directory != '' and zipp != '':
+                ntUZ = True
                 window.Close()
-                zDir = unzipper(directory,zipp)
+                zDir = unzipper(directory,zipp,ntUZ)
                 testing(area,zDir)
                 generateSheets(listOfCSV,'Combined CSV')
                 sg.Popup("complete")
                 mainWin()
                 #impedanceReader(area,directory)
+            if area != '' and directory != '' and zipp == '':
+                ntUZ = False
+                window.Close()
+                zDir = unzipper(directory,zipp,ntUZ)
+                testing(area,zDir)
+                generateSheets(listOfCSV,'Combined CSV')
+                sg.Popup("complete")
+                mainWin()
 
 #Linear definition to create folder
 #navigate to folder, extract all the data into another folder
 #move all .z files to a new folder
 #create CSV's there
-def unzipper(directory,zipp):
-
-    #create new folder to put extracted data in
+def unzipper(directory,zipp,ntUZ):
     os.chdir(directory)
-    newFolder = sg.PopupGetText('Enter a name for the new folder', directory)
-    try:
-        if not os.path.exists(newFolder):
-            os.makedirs(newFolder)
-    except OSError:
-        print('Error')
+    newDirName = directory
+    
+        #outfile = open(output,'w')
+    if ntUZ == True:
+    #create new folder to put extracted data in
+        
+        newFolder = sg.PopupGetText('Enter a name for the new folder', directory)
+        try:
+            if not os.path.exists(newFolder):
+                os.makedirs(newFolder)
+        except OSError:
+            print('Error')
 
-    #extract all data to the new folder
-    newDirName = directory + '/' + newFolder
-    os.chdir(newDirName)
-    with ZipFile(zipp,'r') as zipObj:
-        zipObj.extractall(newDirName)
+        #extract all data to the new folder
+        newDirName = directory + '/' + newFolder
+        
+        os.chdir(newDirName)
+        with ZipFile(zipp,'r') as zipObj:
+            zipObj.extractall(newDirName)
+        pattern = '*.mdat'
+        for (root,dirs,files) in os.walk(newDirName):
+            for filename in fnmatch.filter(files,pattern):
+                infilename = os.path.join(root,filename)
+                oldbase = os.path.splitext(filename)
+                newname = infilename.replace('.mdat', '.zip')
+                output = os.rename(infilename, newname)
+    if ntUZ == False:
+        for filename in os.listdir(directory):
+            infilename = os.path.join(directory,filename)
+            if not os.path.isfile(infilename): continue
+            oldbase = os.path.splitext(filename)
+            newname = infilename.replace('.mdat', '.zip')
+            output = os.rename(infilename, newname)
+
+        
     
     #walk the OS path of all the folders and find all .zip files
     #extract everything it finds
@@ -133,7 +161,7 @@ def unzipper(directory,zipp):
             zipfile.ZipFile(os.path.join(root,filename)).extractall(os.path.join(root, os.path.splitext(filename)[0]))
     
     #pulling all .z files from the extracted folders into a new folder
-    combAll = 'Extracted Z Files'
+    combAll = 'Extracted_Z_Files_And_CSV'
     try:
         if not os.path.exists(combAll):
             os.makedirs(combAll)
@@ -303,7 +331,9 @@ def generateSheets(listOfCSV, fileName):
         print(csvSplitList)
         for val in csvSplitList:
             try:
-                intTemp = (int(val))
+                if val != 'aging' or val != 'preaging':
+                    
+                    intTemp = (int(val))
             except ValueError:
                 print ('Was Not a Temp')
         stringName=(str(intTemp))
