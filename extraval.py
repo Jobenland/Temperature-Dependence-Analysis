@@ -165,7 +165,7 @@ def testing(area,directory):
         stringZPrime = []
         stringZDoublePrime = []
 
-        with open (file, 'r') as f:
+        with open (file, 'r', encoding = 'ISO-8859-1') as f:
             for row in f:
                 if 'End Header:' in row:
                     for x in f:
@@ -262,7 +262,7 @@ def listOfImpFiles(area,directory):
     global listOfImpFiles
     for file in fileList:
 
-        with open(file, "r") as f:
+        with open(file, "r", encoding = 'ISO-8859-1') as f:
 
             for row in f:
 
