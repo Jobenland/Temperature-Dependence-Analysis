@@ -54,7 +54,14 @@ listOfCSV = []
 
 #Main Winodw that displays starting data
 def mainWin():
-    form_rows = [[sg.Text("Enter the file name, file path to save, and the location of the files")],
+    form_rows = [
+                 [sg.Text('NOTES: The Program will either take the folder  of the save the '),
+                    sg.Text('Extracted Zip File',text_color = 'blue')],
+                [sg.Text('      or will take the location of the '),
+                    sg.Text('Already Existing Unzipped Folder', text_color = 'red')],
+                 [sg.Text('+  Omit the zipp file if you have already extracted it')],
+                 [sg.Text('       or if you are on MacOS')],
+                 [sg.Text("Enter the file name, file path to save, and the location of the files")],
                  [sg.Text('Enter the the area', size=(21,1)),sg.InputText(key = 'area')],
                  [sg.Text('Enter the location to save', size=(25,1)),sg.InputText(key = 'files'),sg.FolderBrowse()],
                  [sg.Text('Enter the location of the .zip', size=(25,1)),sg.InputText(key = 'zip'),sg.FileBrowse()],
