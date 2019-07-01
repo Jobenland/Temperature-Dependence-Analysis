@@ -51,6 +51,7 @@ impedanceOhmicList = []
 impedanceTimeInSecounds = []
 impedanceTimeInHours = []
 listOfCSV = []
+listOfComb = []
 
 #Main Winodw that displays starting data
 def mainWin():
@@ -113,6 +114,8 @@ def mainWin():
                 window.Close()
                 zDir = unzipper(directory,zipp,ntUZ)
                 testing(area,zDir)
+                createMultiX(directory,listOfCSV,listOfComb)
+                
                 generateSheets(listOfCSV,'Combined CSV')
                 sg.Popup("complete")
                 mainWin()
@@ -284,11 +287,59 @@ def getRange(intZDoublePrime):
 def createCSV (file,directory,intTS, intFreq, intZPrime,intZDoublePrime,zPrimeOC,zPrimeARC,zDoublePrimeARC,positiveZDoublePrime):
     dirpath = os.chdir(directory)
     fileN = file +'.csv'
+    comb = file + 'Combined'
+    comb = [(zPrimeARC[i],positiveZDoublePrime[i]) for i in range(len(zPrimeARC))]
     dataf = { 'Frequency' :intFreq,'Time In Secounds' : intTS, 'Z Prime' : intZPrime, 'Z Double Prime' : intZDoublePrime, 'Z Prime Ohmic Corrected' : zPrimeOC,
-        'z Prime Area Corrected' : zPrimeARC, 'Z Double Prime Area Corrected' : zDoublePrimeARC, '+- Z Double Prime' : positiveZDoublePrime } #column headings for the excel file
+        'z Prime Area Corrected' : zPrimeARC, 'Z Double Prime Area Corrected' : zDoublePrimeARC, '+- Z Double Prime' : positiveZDoublePrime, 'DUAL COL' : comb} #column headings for the excel file
     df = pd.DataFrame(data=dataf)
     df.to_csv(fileN,index = False)
     listOfCSV.append(fileN)
+    listOfComb.append(comb)
+
+def createMultiX(directory,listOfCSV,listOfComb):
+    titleList = []
+    for csv in listOfCSV:
+        csvSplitList = csv.split('_')
+        print(csvSplitList)
+        for val in csvSplitList:
+            try:
+                if val != 'aging' or val != 'preaging':
+                    
+                    intTemp = (int(val))
+
+            except ValueError:
+                print ('Was Not a Temp')
+        stringName=(str(intTemp))
+        titleList.append(stringName)
+
+    dirpath = os.chdir(directory)
+    fileN = "Multi X-Axis Support.csv"
+    '''
+    dataf = { '1': listOfComb[0]}
+    df = pd.DataFrame(data=dataf)
+    df.to_csv(fileN, index = False)
+    for i in range(len(listOfComb)):
+
+        
+        df = pd.read_csv(fileN)
+        df['test',i] = listOfComb[i]
+        df.to_csv(fileN)
+    '''
+   
+    for i in range(len(listOfComb)):
+        if i ==0:
+            dataf = {titleList[0] : listOfComb[i]}
+            df = pd.DataFrame(data=dataf)
+        if i !=0:
+            head = titleList[i]
+            df[head] = listOfComb[i]
+            df.to_csv(fileN, index = False)
+        
+
+
+    
+    
+
 
 #definition to make an array of Files that are the experiment "Impedance"
 def listOfImpFiles(area,directory):
@@ -341,9 +392,11 @@ def generateSheets(listOfCSV, fileName):
                 if val != 'aging' or val != 'preaging':
                     
                     intTemp = (int(val))
+
             except ValueError:
                 print ('Was Not a Temp')
         stringName=(str(intTemp))
+        #createMultiX()
         df = pd.read_csv(csv)
         df.to_excel(writer, sheet_name=stringName)
     writer.save() 
