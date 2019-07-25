@@ -52,7 +52,15 @@ impedanceTimeInSecounds = []
 impedanceTimeInHours = []
 listOfCSV = []
 listOfComb = []
-
+olist = []
+nolist = []
+tasr = []
+acohmic = []
+acnonohmic = []
+actasr = []
+filename =[]
+otherthinglist = []
+print = sg.EasyPrint
 #Main Winodw that displays starting data
 def mainWin():
     form_rows = [
@@ -105,6 +113,7 @@ def mainWin():
                 window.Close()
                 zDir = unzipper(directory,zipp,ntUZ)
                 testing(area,zDir)
+                createMultiX(directory,listOfCSV,listOfComb)
                 generateSheets(listOfCSV,'Combined CSV')
                 sg.Popup("complete")
                 mainWin()
@@ -137,7 +146,7 @@ def unzipper(directory,zipp,ntUZ):
             if not os.path.exists(newFolder):
                 os.makedirs(newFolder)
         except OSError:
-            print('Error')
+            print('Fatal Error Creating Directory')
 
         #extract all data to the new folder
         newDirName = directory + '/' + newFolder
@@ -146,6 +155,7 @@ def unzipper(directory,zipp,ntUZ):
         with ZipFile(zipp,'r') as zipObj:
             zipObj.extractall(newDirName)
         pattern = '*.mdat'
+        print("walking the directory for mdat files and extracting them")
         for (root,dirs,files) in os.walk(newDirName):
             for filename in fnmatch.filter(files,pattern):
                 infilename = os.path.join(root,filename)
@@ -153,6 +163,7 @@ def unzipper(directory,zipp,ntUZ):
                 newname = infilename.replace('.mdat', '.zip')
                 output = os.rename(infilename, newname)
     if ntUZ == False:
+        print("walking the directory for mdat files and extracting them")
         for filename in os.listdir(directory):
             infilename = os.path.join(directory,filename)
             if not os.path.isfile(infilename): continue
@@ -173,20 +184,21 @@ def unzipper(directory,zipp,ntUZ):
     #pulling all .z files from the extracted folders into a new folder
     combAll = 'Extracted_Z_Files_And_CSV'
     try:
+        print("making the directory of z files and CSV")
         if not os.path.exists(combAll):
             os.makedirs(combAll)
     except OSError:
-        print('Error')
+        print('Fatal error creating directory. May already exist?')
     try:
         newZDir = newDirName + '/' + combAll
         for root, dirs, files in os.walk((os.path.normpath(newDirName)), topdown=False):
             for name in files:
                 if name.endswith('.z'):
-                    print ('Found')
+                    print (name, 'has a z extension. moving to combined folder')
                     SourceFolder = os.path.join(root,name)
                     shutil.copy2(SourceFolder,newZDir)
     except shutil.SameFileError:
-        print("Same File Name Found")
+        print(name , " was found with the same file name")
     return(newZDir)
 
 #Definiton to do that math on the .z files in the new folder
@@ -240,8 +252,17 @@ def testing(area,directory):
             zPrimeARC= [((zPrimeOC[i])*(intArea)) for i in range(len(intZPrime))]
             zDoublePrimeARC = [((intZDoublePrime[i])*(intArea)) for i in range(len(intZDoublePrime))]
             positiveZDoublePrime = [-x for x in zDoublePrimeARC]
+        olist.append(ohmicZPrime)
+        nolist.append(intZPrime[-1]-ohmicZPrime)
+        tasr.append(intZPrime[-1])
+        acohmic.append(ohmicZPrime*intArea)
+        acnonohmic.append((intZPrime[-1]-ohmicZPrime)*intArea)
+        actasr.append(intZPrime[-1]*intArea)
+        filename.append(file)
+
+
         createCSV(file,directory,intTS, intFreq, intZPrime,intZDoublePrime,zPrimeOC,zPrimeARC,zDoublePrimeARC,positiveZDoublePrime)
-        print("rp?")
+        print(file, " has been parsed. continuing to next file...")
 
 #definition to get the range of the data
 #will get the last negative point and the last positive point
@@ -285,6 +306,7 @@ def getRange(intZDoublePrime):
 #creates the CSV's and appends them to a list for later
 # excel use   
 def createCSV (file,directory,intTS, intFreq, intZPrime,intZDoublePrime,zPrimeOC,zPrimeARC,zDoublePrimeARC,positiveZDoublePrime):
+    print("creating csv for ",file)
     dirpath = os.chdir(directory)
     fileN = file +'.csv'
     comb = file + 'Combined'
@@ -298,15 +320,25 @@ def createCSV (file,directory,intTS, intFreq, intZPrime,intZDoublePrime,zPrimeOC
 
 def createMultiX(directory,listOfCSV,listOfComb):
     titleList = []
+    rTable = 'Resistance Table.csv'
+    rt = {'Filename':filename,
+          'Ohmic': olist,
+          'NonOhmic' : nolist,
+          'Tasr' : tasr,
+          'Area Corrected Ohmic' : acohmic,
+          'Area Corrected Non Ohmic' : acnonohmic,
+          'Area Corrected Tasr' : actasr}
+    dt = pd.DataFrame(data=rt)
+    dt.to_csv(rTable,index = False)
+    
     for csv in listOfCSV:
         csvSplitList = csv.split('_')
         print(csvSplitList)
         for val in csvSplitList:
             try:
                 if val != 'aging' or val != 'preaging':
-                    
                     intTemp = (int(val))
-
+                   
             except ValueError:
                 print ('Was Not a Temp')
         stringName=(str(intTemp))
