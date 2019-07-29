@@ -29,6 +29,9 @@ Pip
 
 A step by step series of examples that tell you how to get a development env running
 
+Easiest
+`pip install -r requirements.txt`
+
 
 ```
 pip install tkinter (not right name) coming soon
