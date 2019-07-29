@@ -94,9 +94,17 @@ def mainWin():
                 testing(newZDir)
                 createMultiX(newZDir,defaultDir)
                 generateSheets(newZDir)
+                convertzToTxt(files)
                 sg.Popup('Complete')
             break
-
+def convertzToTxt(files):
+    pattern = '*.z'
+    for (root,dirs,files) in os.walk(files):
+        for filename in fnmatch.filter(files,pattern):
+            infilename = os.path.join(root,filename)
+            oldbase = os.path.splitext(filename)
+            newname = infilename.replace('.z', '.txt')
+            output = os.rename(infilename, newname)
 def generateSheets(newZDir):
     print('System STANDBY. Awaiting user input')
     csvname = sg.PopupGetText("Enter a name for the combined excel file")
