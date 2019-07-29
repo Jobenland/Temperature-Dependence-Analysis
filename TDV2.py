@@ -86,15 +86,17 @@ def mainWin():
                 print("Maryland Energy Innovation Institute -> written by Jonathan Obenland")
                 print("System Standby. Awaiting Area Corrected Value...")
                 defaultDir = files
+                
                 convertMdatToZip(defaultDir)               
                 unzipFiles(defaultDir)
+                convertzToTxt(files)
                 newZDir = extractedFolder(defaultDir)
 #                impFiles = listOfImpFiles(defaultDir)
                 
                 testing(newZDir)
                 createMultiX(newZDir,defaultDir)
                 generateSheets(newZDir)
-                convertzToTxt(files)
+                
                 sg.Popup('Complete')
             break
 def convertzToTxt(files):
@@ -187,7 +189,7 @@ def extractedFolder(files):
     newZDir = newDirName + '/' + combAll
     for root, dirs, files in os.walk((os.path.normpath(newDirName)), topdown=False):
         for name in files:
-            if name.endswith('.z'):
+            if name.endswith('.txt'):
                 try:
                     print (name, 'has a z extension. moving to combined folder')
                     SourceFolder = os.path.join(root,name)
