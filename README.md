@@ -7,8 +7,10 @@ It will then place the data in a csv that can be used in graphing in the CSV gra
 
 NOTE: When given the option to select a zip file, Mac users should instead select the `unzipped folder location` of their original zipped file and leave the final box BLANK. Otherwise, The program will not be able to read the zip file and call a critical error causing the program to crash(working on a fix in the future)
 
+UPDATE: To use the New windows for both MAC and Windows make sure to clone version 2.0 and run `TDV2.py`
+
 ## Getting Started and Important Notes
-Files MUST be zipped in a folder for correct deployment Ex. `EIS_OCV_..._EXAMPLE.zip`
+Files MUST be zipped in a folder for correct deployment Ex. `EIS_OCV_..._EXAMPLE.zip` this is NOT needed in `TDV2.py`
 
 Also Note, if your files names do not contain a temp value Ex. EIS_OCV_`400` the combination of CSV's will NOT work
   adding a temperature to any position in the filename seperated by a _ is the best way to fix this issue
