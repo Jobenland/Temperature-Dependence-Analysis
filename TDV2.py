@@ -237,7 +237,10 @@ def fileReader(impFiles):
     area = sg.PopupGetText("enter area")
     os.chdir(impFiles)
     listF = os.listdir(impFiles)
+    i=0
     for file in listF:
+        sg.OneLineProgressMeter('File Reader Progress',i,(len(listF)-1),'prgmeter')
+        i+=1
         stringFreq = []
         stringTS = []
         stringZPrime = []
@@ -292,6 +295,7 @@ def fileReader(impFiles):
         listOfCSV.append(fileName)
         listOfComb.append(comb)
         print(file, " has been parsed. continuing to next file...")
+        
 
 #Helper function to get the range of the location of the ohmic
 def getRange(intZDoublePrime):
