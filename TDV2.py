@@ -124,8 +124,14 @@ def generateSheets(newZDir):
         if 'EIS_OCV' in filename:
             sheetName = sheetName.strip('EIS_OCV')
             sheetNameSplit = sheetName.split('_')
-            sheetName = sheetNameSplit[0]+sheetNameSplit[1]+sheetNameSplit[2]       
-        df.to_excel(writer, sheet_name=sheetName)
+            sheetName = sheetNameSplit[0]+sheetNameSplit[1]+sheetNameSplit[2]
+        try:      
+            df.to_excel(writer, sheet_name=sheetName)
+        except xlsxwriter.exceptions.DuplicateWorksheetName:
+            print("Duplicate name found, adding DUP to name and ammending...")
+            sheetName = sheetNameSplit[0]+sheetNameSplit[1]+sheetNameSplit[2] + "DUP"
+            print("duplicate sheet name ",sheetName, " added")
+            df.to_excel(writer, sheet_name=sheetName)
     writer.save()
 
 #creates the Resistance Table and the Multi Axis graphing support
