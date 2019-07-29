@@ -85,20 +85,18 @@ def mainWin():
                 print("Symmetrical Cell Converter")
                 print("Maryland Energy Innovation Institute -> written by Jonathan Obenland")
                 print("System Standby. Awaiting Area Corrected Value...")
-                defaultDir = files
-                
+                defaultDir = files               
                 convertMdatToZip(defaultDir)               
                 unzipFiles(defaultDir)
                 convertzToTxt(files)
-                newZDir = extractedFolder(defaultDir)
-#                impFiles = listOfImpFiles(defaultDir)
-                
-                testing(newZDir)
+                newZDir = extractedFolder(defaultDir)               
+                fileReader(newZDir)
                 createMultiX(newZDir,defaultDir)
-                generateSheets(newZDir)
-                
+                generateSheets(newZDir)               
                 sg.Popup('Complete')
             break
+
+#converts Z files to TXT files
 def convertzToTxt(files):
     pattern = '*.z'
     for (root,dirs,files) in os.walk(files):
@@ -107,6 +105,9 @@ def convertzToTxt(files):
             oldbase = os.path.splitext(filename)
             newname = infilename.replace('.z', '.txt')
             output = os.rename(infilename, newname)
+
+#generates the combined excel file
+#sheet names are stripped to be under 31 chars
 def generateSheets(newZDir):
     print('System STANDBY. Awaiting user input')
     csvname = sg.PopupGetText("Enter a name for the combined excel file")
@@ -123,12 +124,12 @@ def generateSheets(newZDir):
         if 'EIS_OCV' in filename:
             sheetName = sheetName.strip('EIS_OCV')
             sheetNameSplit = sheetName.split('_')
-            sheetName = sheetNameSplit[0]+sheetNameSplit[1]+sheetNameSplit[2]
-        
-        
+            sheetName = sheetNameSplit[0]+sheetNameSplit[1]+sheetNameSplit[2]       
         df.to_excel(writer, sheet_name=sheetName)
     writer.save()
 
+#creates the Resistance Table and the Multi Axis graphing support
+#for use with the grapher
 def createMultiX(newZDir,defaultDir):
     titleList=[]
     rTable = 'Resistance Table.csv'
@@ -142,6 +143,9 @@ def createMultiX(newZDir,defaultDir):
     dt = pd.DataFrame(data=rt)
     dt.to_csv(rTable,index = False)
     listOfCSV.append(rTable)
+
+    #uncomment this to use Mult X Support
+    #VVVVVVVVVVVVVVV
     '''
     for csv in listOfCSV:
         csvSplitList = csv.split('_')
@@ -167,25 +171,19 @@ def createMultiX(newZDir,defaultDir):
             df.to_csv(fileN, index = False)
             listOfCSV.append(fileN)
     '''
+    #^^^^^^^^^^^^^^^
 
+#takes all the z files and places them into one location
 def extractedFolder(files):
     newDirName = files
     os.chdir(newDirName)
     #pulling all .z files from the extracted folders into a new folder
     combAll = 'Extracted_Z_Files_And_CSV'
-
-    """ try:
-        print("making the directory of z files and CSV")
-        if not os.path.exists(combAll):
-            os.mkdir(combAll)
-    except OSError:
-        print('Fatal error creating directory. May already exist?') """
     if not os.path.exists(combAll):
         os.mkdir(combAll)
         print("Directory " , combAll ,  " Created ")
     else:    
         print("Directory " , combAll ,  " already exists")    
-    
     newZDir = newDirName + '/' + combAll
     for root, dirs, files in os.walk((os.path.normpath(newDirName)), topdown=False):
         for name in files:
@@ -195,10 +193,10 @@ def extractedFolder(files):
                     SourceFolder = os.path.join(root,name)
                     shutil.copy2(SourceFolder,newZDir)
                 except shutil.SameFileError:
-                    print(name , " was found with the same file name")
-        
+                    print(name , " was found with the same file name")       
     return(newZDir)
 
+#Converts the MDATS to ZIPS to be unzipped
 def convertMdatToZip(files):
     pattern = '*.mdat'
     for (root,dirs,files) in os.walk(files):
@@ -208,6 +206,7 @@ def convertMdatToZip(files):
             newname = infilename.replace('.mdat', '.zip')
             output = os.rename(infilename, newname)
 
+#Unzips the newly zipped files
 def unzipFiles(files):
     pattern = '*.zip'
     for root, dirs, files in os.walk(files):
@@ -215,6 +214,8 @@ def unzipFiles(files):
             print(os.path.join(root,filename))
             zipfile.ZipFile(os.path.join(root,filename)).extractall(os.path.join(root, os.path.splitext(filename)[0]))
 
+#TODO make sure this isnt needed and remove
+#THIS is never called
 def listOfImpFiles(files):
     fileList = os.listdir(files)
     os.chdir(files)
@@ -231,7 +232,8 @@ def listOfImpFiles(files):
                                     arrayOfImpFiles.append(file)
     return arrayOfImpFiles
 
-def testing(impFiles):
+#Reads and does math on the files passed in
+def fileReader(impFiles):
     area = sg.PopupGetText("enter area")
     os.chdir(impFiles)
     listF = os.listdir(impFiles)
@@ -240,7 +242,6 @@ def testing(impFiles):
         stringTS = []
         stringZPrime = []
         stringZDoublePrime = []
-
         with open (file, 'r', encoding = 'ISO-8859-1') as f:
             for row in f:
                 if 'End Header:' in row:
@@ -253,10 +254,7 @@ def testing(impFiles):
                     intTS = [float(i) for i in stringTS]
                     intZPrime = [float(i) for i in stringZPrime]
                     intZDoublePrime = [float(i) for i in stringZDoublePrime]
-                    #calls the function to calculate the range of the values
-                    #needed to find the ohmin
                     startRange,endRange = getRange(intZDoublePrime)
-                    #-1 is the "error code" used when data never goes below the x-axis
                     if endRange == -1:
                         zDoublePrimeShort = max(intZDoublePrime)
                         zDoublePrimeABS = zDoublePrimeShort
@@ -295,12 +293,11 @@ def testing(impFiles):
         listOfComb.append(comb)
         print(file, " has been parsed. continuing to next file...")
 
+#Helper function to get the range of the location of the ohmic
 def getRange(intZDoublePrime):
     PG=[]
     NG=[]
     t=0
-    #first part tests point and the next point
-    #to find positive then negative
     for i in range(len(intZDoublePrime)):
         if intZDoublePrime[i] > 0:
             t+1
@@ -308,9 +305,6 @@ def getRange(intZDoublePrime):
             if intZDoublePrime[i-1] >0:
                 indexx = i-1
                 break
-    
-    #makes lists for all the positive corresponding index
-    #makes lists for all the negative corresponding index
     for i in range(len(intZDoublePrime)):
         if intZDoublePrime[i] < 0:
             PG.append(i)
@@ -319,9 +313,6 @@ def getRange(intZDoublePrime):
         elif intZDoublePrime[i] == 0:
             OH = intZDoublePrime[i]
             break
-   
-   #checking to make sure that the graph has both
-   #positive and negative values
     if NG == [] and PG != []:
         startRange = min(intZDoublePrime)
         endRange = -1
@@ -331,5 +322,6 @@ def getRange(intZDoublePrime):
         endRange = startRange + 1
     return(startRange,endRange)
 
+#Magic Method to call main
 if __name__ == '__main__':
     mainWin()
