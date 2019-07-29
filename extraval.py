@@ -415,7 +415,8 @@ def getDate(file):
 # different temperatures
 def generateSheets(listOfCSV, fileName):
     fileName = sg.PopupGetText("enter a name for the combined Excel file", 'Excel File Name')
-    writer = pd.ExcelWriter(fileName+'.xlsx', engine = 'xlsxwriter') 
+    fileN = fileName+'.xlsx'
+    writer = pd.ExcelWriter(fileN, engine = 'xlsxwriter') 
     for csv in listOfCSV:
         csvSplitList = csv.split('_')
         print(csvSplitList)
@@ -429,7 +430,7 @@ def generateSheets(listOfCSV, fileName):
                 print ('Was Not a Temp')
         stringName=(str(intTemp))
         #createMultiX()
-        df = pd.read_csv(csv)
+        df = pd.read_csv(csv, encoding="ISO-8859-1")
         df.to_excel(writer, sheet_name=stringName)
     writer.save() 
 
