@@ -294,7 +294,7 @@ def fileReader(impFiles):
         filename.append(file)
         nameoffile, file_extension = os.path.splitext(file)
         comb = [(zPrimeARC[i],positiveZDoublePrime[i]) for i in range(len(zPrimeARC))]
-        dataf = { 'Frequency' :intFreq,'Time In Secounds' : intTS, 'Z Prime' : intZPrime, 'Z Double Prime' : intZDoublePrime, 'Z Prime Ohmic Corrected' : zPrimeOC,
+        dataf = { 'Frequency' :intFreq,'Time In Seconds' : intTS, 'Z Prime' : intZPrime, 'Z Double Prime' : intZDoublePrime, 'Z Prime Ohmic Corrected' : zPrimeOC,
         'z Prime Area Corrected' : zPrimeARC, 'Z Double Prime Area Corrected' : zDoublePrimeARC, '+- Z Double Prime' : positiveZDoublePrime, 'DUAL COL' : comb} #column headings for the excel file
         df = pd.DataFrame(data=dataf)
         fileName = nameoffile +'.csv'
