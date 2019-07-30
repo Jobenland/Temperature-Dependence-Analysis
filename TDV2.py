@@ -292,14 +292,19 @@ def fileReader(impFiles):
         acnonohmic.append((intZPrime[-1]-ohmicZPrime)*intArea)
         actasr.append(intZPrime[-1]*intArea)
         filename.append(file)
+        nameoffile, file_extension = os.path.splitext(file)
         comb = [(zPrimeARC[i],positiveZDoublePrime[i]) for i in range(len(zPrimeARC))]
         dataf = { 'Frequency' :intFreq,'Time In Secounds' : intTS, 'Z Prime' : intZPrime, 'Z Double Prime' : intZDoublePrime, 'Z Prime Ohmic Corrected' : zPrimeOC,
         'z Prime Area Corrected' : zPrimeARC, 'Z Double Prime Area Corrected' : zDoublePrimeARC, '+- Z Double Prime' : positiveZDoublePrime, 'DUAL COL' : comb} #column headings for the excel file
         df = pd.DataFrame(data=dataf)
-        fileName = file +'.csv'
+        fileName = nameoffile +'.csv'
         df.to_csv(fileName,index = False)
         listOfCSV.append(fileName)
         listOfComb.append(comb)
+        dataDRT = {'Frequency' : intFreq, 'Z Prime Ohmic Corrected' : zPrimeOC, 'Z Double Prime Area Corrected' : zDoublePrimeARC}
+        dt = pd.DataFrame(data=dataDRT)
+        fileName = nameoffile + 'DRT-Preproccessing.csv'
+        dt.to_csv(fileName,index=False)
         print(file, " has been parsed. continuing to next file...")
         
 
