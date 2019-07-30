@@ -301,10 +301,10 @@ def fileReader(impFiles):
         df.to_csv(fileName,index = False)
         listOfCSV.append(fileName)
         listOfComb.append(comb)
-        dataDRT = {'Frequency' : intFreq, 'Z Prime Ohmic Corrected' : zPrimeOC, 'Z Double Prime Area Corrected' : zDoublePrimeARC}
+        dataDRT = {'Frequency' : intFreq, 'Z Prime Ohmic Corrected' : zPrimeARC, 'Z Double Prime Area Corrected' : zDoublePrimeARC}
         dt = pd.DataFrame(data=dataDRT)
         fileName = nameoffile + 'DRT-Preproccessing.csv'
-        dt.to_csv(fileName,index=False)
+        dt.to_csv(fileName,index=False,header=None)
         print(file, " has been parsed. continuing to next file...")
         
 
