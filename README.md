@@ -71,6 +71,10 @@ Im getting other errors and I believe it did not give out the right information 
 The best way to deploy this software for use in lab is to run locally either through command prompt or a Python Interpreter of your own
 
 NOTE: running through command prompt or terminal will result in faster completion that debugging through a code editor
+
+## Images
+![Fildes to give](Img/files.png)
+
 ## Built With
 
 * [Pandas](https://pandas.pydata.org/) - Used to edit and read CSV's
