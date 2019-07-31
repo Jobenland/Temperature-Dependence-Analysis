@@ -10,12 +10,14 @@ NOTE: When given the option to select a zip file, Mac users should instead selec
 UPDATE: To use the New windows for both MAC and Windows make sure to clone version 2.0 and run `TDV2.py`
 
 ## Getting Started and Important Notes
+NOTE: Please see Images below for information regarding the correct files to give the program
+
 Files MUST be zipped in a folder for correct deployment Ex. `EIS_OCV_..._EXAMPLE.zip` this is NOT needed in `TDV2.py`
 
-Also Note, if your files names do not contain a temp value Ex. EIS_OCV_`400` the combination of CSV's will NOT work
-  adding a temperature to any position in the filename seperated by a _ is the best way to fix this issue
+On startup, the user will be prompted for a folder of MDAT Files. this program can handle MDATS, ZIPPED folders, and UNZIPPED folders.
+each file in the folder should be a Temperature for a specific material. For example `EIS_OCV_500_DRT_1pCO2.zip` or `EIS_OCV_500_DRT_1pCO2.mdat` would be given that contains .mpro, .cor, and .z files. see images below for more information.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Once You have successfully put all your files in a folder and selected `start` on the main window the program is ready to analyze the data
 
 ### Prerequisites
 
@@ -35,27 +37,16 @@ Automatic Method
 
 Manual Method
 ```
-pip install tkinter (not right name) coming soon
 pip install pandas 
 pip install PySimpleGUI
 pip install bokeh
 pip install np
 ```
 
-(optional) not needed
+## Running the program
 
-```
-import tkinter
-import pandas
-import PySimpleGUI
-import bokeh
-```
-
-## Running the tests
-
-To ensure that all modules are loaded and everything is working. Launch the program and attempt give a INT value for the area, a location to save the extracted files, and then the location of the zip file
-
-Given that the user correctly gave a number as the ares, a generic place to put the extracted files, and a ZIP file as the zip path.
+#cloning the directory and preparing for executuion
+the best way to install and run the program is to clone this repo to your home directory by typing `git clone https://github.com/Jobenland/Temperature-Dependence-Analysis`. Once the directory has been cloned, change the directory `cd Temperature-Dependence-Analysis` to the directory of the repository. Ensure you are in the directory by typing `dir` and checking the output for a file called `TCPV3`. Type `python --version` or `python3 -version` and ensure the output version is at least 3.x.
 
 ## Deployment
 
