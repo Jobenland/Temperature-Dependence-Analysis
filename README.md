@@ -54,17 +54,17 @@ Once the program is completed, The user should check the output. navigate yourse
 ## FAQ
 PLEASE CHECK HERE BEFORE CONTACTING ME ON ISSUES. MOST OF THEM ARE SIMPLY SYNTAX ERRORS THAT CAN BE EASILY SOLVED
 
-The extracted z and csv folder is not there. How can I fix this?
-    best way to fix this is by ensuring you are looking in the right directory and restarting the program
+The extracted z and csv folder is not there. How can I fix this? -->
+    *est way to fix this is by ensuring you are looking in the right directory and restarting the program*
     
-The filenames in the combined excel file are not correct?
-    This program works by taking the `EIS_OCV` out of the file name, taking the next 3 words `500_DRT_1pCO2` and then purging the rest       to fix this rename your files using this naming convention
+The filenames in the combined excel file are not correct? -->
+    *This program works by taking the `EIS_OCV` out of the file name, taking the next 3 words `500_DRT_1pCO2` and then purging the rest       to fix this rename your files using this naming convention*
     
-Im getting an error `no module found ___`
-    enter `pip install _____` in your command prompt and restart the program
+Im getting an error `no module found ___` -->
+    *enter `pip install _____` in your command prompt and restart the program*
     
-Im getting other errors and I believe it did not give out the right information
-    submit an issue with good information regarding your problem and I will try to fix is as soon as possible
+Im getting other errors and I believe it did not give out the right information -->
+    *submit an issue with good information regarding your problem and I will try to fix is as soon as possible*
 
 ## Deployment
 
