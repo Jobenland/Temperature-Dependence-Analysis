@@ -74,6 +74,13 @@ NOTE: running through command prompt or terminal will result in faster completio
 
 ## Images
 ![Fildes to give](Img/files.png)
+![program start](Img/PrgStart.png)
+![Debug window](Img/Debug.png)
+![Area Prompt](Img/area.png)
+![combined name](Img/comb.png)
+![done](Img/complete.png)
+![folder after finish](Img/endfolder.png)
+![excel sheets](Img/excel.png)
 
 ## Built With
 
