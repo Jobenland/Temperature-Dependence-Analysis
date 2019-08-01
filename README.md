@@ -10,6 +10,9 @@ NOTE: When given the option to select a zip file, Mac users should instead selec
 UPDATE: To use the New windows for both MAC and Windows make sure to clone version 2.0 and run `TDV2.py`
 
 ## Getting Started and Important Notes
+
+Video Example: https://youtu.be/RBxwvV_iBO8
+
 NOTE: Please see Images below for information regarding the correct files to give the program
 
 Files MUST be zipped in a folder for correct deployment Ex. `EIS_OCV_..._EXAMPLE.zip` this is NOT needed in `TDV2.py`
