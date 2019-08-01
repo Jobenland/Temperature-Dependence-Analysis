@@ -62,7 +62,7 @@ PLEASE CHECK HERE BEFORE CONTACTING ME ON ISSUES. MOST OF THEM ARE SIMPLY SYNTAX
 some questions can be solved by the video example: https://youtu.be/RBxwvV_iBO8
 
 The extracted z and csv folder is not there. How can I fix this? -->
-    *est way to fix this is by ensuring you are looking in the right directory and restarting the program*
+    *best way to fix this is by ensuring you are looking in the right directory and restarting the program*
     
 The filenames in the combined excel file are not correct? -->
     *This program works by taking the `EIS_OCV` out of the file name, taking the next 3 words `500_DRT_1pCO2` and then purging the rest       to fix this rename your files using this naming convention*
