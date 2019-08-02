@@ -38,6 +38,7 @@ from bokeh.models import ColumnDataSource
 import fnmatch
 import zipfile
 import shutil
+import math
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
 else:
@@ -65,6 +66,7 @@ def mainWin():
     form_rows = [
                  [sg.Text("Place all MDATS to include in folder")],
                  [sg.Text('Select new folder', size=(25,1)),sg.InputText(key = 'mdatFolder'),sg.FolderBrowse()],
+                 [sg.Checkbox('Frequency Decades', key = ('dec'))],
                  [sg.Button('start'),sg.Exit()]]
 
     window = sg.Window("Temperature Dependence Version 3")
@@ -81,6 +83,7 @@ def mainWin():
                 sg.PopupError("Insufficent data or Null Pointers given")
                 mainWin()
             elif files != '':
+                decades = values['dec']
                 window.Close()
                 print("Symmetrical Cell Converter")
                 print("Maryland Energy Innovation Institute -> written by Jonathan Obenland")
@@ -90,7 +93,7 @@ def mainWin():
                 unzipFiles(defaultDir)
                 convertzToTxt(files)
                 newZDir = extractedFolder(defaultDir)               
-                fileReader(newZDir)
+                fileReader(newZDir,decades)
                 createMultiX(newZDir,defaultDir)
                 generateSheets(newZDir)               
                 sg.Popup('Complete')
@@ -104,7 +107,10 @@ def convertzToTxt(files):
             infilename = os.path.join(root,filename)
             oldbase = os.path.splitext(filename)
             newname = infilename.replace('.z', '.txt')
-            output = os.rename(infilename, newname)
+            try:
+                output = os.rename(infilename, newname)
+            except FileExistsError:
+                pass
 
 #generates the combined excel file
 #sheet names are stripped to be under 31 chars
@@ -239,7 +245,7 @@ def listOfImpFiles(files):
     return arrayOfImpFiles
 
 #Reads and does math on the files passed in
-def fileReader(impFiles):
+def fileReader(impFiles,decades):
     area = sg.PopupGetText("enter area")
     os.chdir(impFiles)
     listF = os.listdir(impFiles)
@@ -251,6 +257,10 @@ def fileReader(impFiles):
         stringTS = []
         stringZPrime = []
         stringZDoublePrime = []
+        decFreqIndex = []
+        decFreq=[]
+        decZP = []
+        decZDP = []
         with open (file, 'r', encoding = 'ISO-8859-1') as f:
             for row in f:
                 if 'End Header:' in row:
@@ -264,6 +274,7 @@ def fileReader(impFiles):
                     intZPrime = [float(i) for i in stringZPrime]
                     intZDoublePrime = [float(i) for i in stringZDoublePrime]
                     startRange,endRange = getRange(intZDoublePrime)
+                    
                     if endRange == -1:
                         zDoublePrimeShort = max(intZDoublePrime)
                         zDoublePrimeABS = zDoublePrimeShort
@@ -285,6 +296,30 @@ def fileReader(impFiles):
             zPrimeARC= [((zPrimeOC[i])*(intArea)) for i in range(len(intZPrime))]
             zDoublePrimeARC = [((intZDoublePrime[i])*(intArea)) for i in range(len(intZDoublePrime))]
             positiveZDoublePrime = [-x for x in zDoublePrimeARC]
+            if decades==True:
+                for val in intFreq:
+                    dectest = math.log10(val)
+                    try:
+                        dosomething = dectest - math.floor(dectest)
+                        if dosomething > 0.0 :
+                            pass
+                        elif dosomething == 0.0:
+                            decFreq.append(val)
+                            #indexx = intFreq.index(val)
+                            decFreqIndex.append(intFreq.index(val))
+                    except:
+                        print("not a decade")
+                for dec in decFreqIndex:
+                    decZP.append(zPrimeARC[dec])
+                    decZDP.append(zDoublePrimeARC[dec])
+                nameoffile, file_extension = os.path.splitext(file)
+                datadec = { 'Frequency' : decFreq, 'Z Prime' : decZP, 'Z Double Prime' : decZDP}
+                dec = pd.DataFrame(data=datadec)
+                fileName = nameoffile +'-Decades.csv'
+                dec.to_csv(fileName,index = False)
+
+
+
         olist.append(ohmicZPrime)
         nolist.append(intZPrime[-1]-ohmicZPrime)
         tasr.append(intZPrime[-1])
