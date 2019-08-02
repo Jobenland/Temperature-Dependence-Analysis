@@ -48,6 +48,8 @@ pip install np
 
 ## Running the program
 
+Video Example: https://youtu.be/RBxwvV_iBO8
+
 The best way to install and run the program is to clone this repo to your home directory by typing `git clone https://github.com/Jobenland/Temperature-Dependence-Analysis`. Once the directory has been cloned, change the directory `cd Temperature-Dependence-Analysis` to the directory of the repository. Ensure you are in the directory by typing `dir` and checking the output for a file called `TCPV2`. Type `python --version` or `python3 -version` and ensure the output version is at least 3.x.
 
 Once you have checked the python version the program can be ran by typing `python TCPV2.py` *see screenshots for more info* and you should be given a UI with a box to select the folder of your files *see "Getting Started and Important Notes" for more info regarding file types* select the folder location and hit `start` once start is selected a debug window will appear giving information on the current state of the program. Next, a new window will come up asking for the area, type in a number that is HALF of your actual area. for example, for an area that is `0.31` enter `0.155`. Once area has been entered select `ok` and the program will output a progress bar *this may take a while depending on amount of data given* once this runs and completes it will show one last popup asking for a combined excel file name. This program compiles all data for all temps and materials into one xlsx file with various sheets *for sheet name problems see FAQ* After it ammends data to the new file, the program will indicate it is complete with a popup stating `complete` and the user can hit `ok` to terminate the program.
@@ -57,8 +59,10 @@ Once the program is completed, The user should check the output. navigate yourse
 ## FAQ
 PLEASE CHECK HERE BEFORE CONTACTING ME ON ISSUES. MOST OF THEM ARE SIMPLY SYNTAX ERRORS THAT CAN BE EASILY SOLVED
 
+some questions can be solved by the video example: https://youtu.be/RBxwvV_iBO8
+
 The extracted z and csv folder is not there. How can I fix this? -->
-    *est way to fix this is by ensuring you are looking in the right directory and restarting the program*
+    *best way to fix this is by ensuring you are looking in the right directory and restarting the program*
     
 The filenames in the combined excel file are not correct? -->
     *This program works by taking the `EIS_OCV` out of the file name, taking the next 3 words `500_DRT_1pCO2` and then purging the rest       to fix this rename your files using this naming convention*
